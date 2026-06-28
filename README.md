@@ -1,119 +1,142 @@
-# Lecteur Local — lecteur de musique hors-ligne pour Android
+# LocalBeats — Offline Local Music Player for Android
 
-Application Android native (Kotlin + Jetpack Compose + Media3) de lecture de
-musique **stockée en local** sur le téléphone et la carte microSD. Conçue pour
-Android 12 (testée comme cible Samsung Galaxy S10e), compatible Android 8.0+.
+![Android](https://img.shields.io/badge/Android-8.0%2B-3DDC84?logo=android\&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.0-7F52FF?logo=kotlin\&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-UI-4285F4?logo=jetpackcompose\&logoColor=white)
+![Media3](https://img.shields.io/badge/AndroidX-Media3-34A853)
+![ExoPlayer](https://img.shields.io/badge/ExoPlayer-1.4-4285F4)
+![Room](https://img.shields.io/badge/Room-Database-1976D2)
+![DataStore](https://img.shields.io/badge/DataStore-Preferences-1976D2)
+![Coil](https://img.shields.io/badge/Coil-Image%20Loading-FF6F00)
+![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
-> ⚠️ **À lire en premier.** Ce dépôt contient le **code source complet** de
-> l'application. Il n'a **pas** été compilé : aucun outil Android n'était
-> disponible pour produire l'APK directement. Deux façons d'obtenir l'APK sont
-> décrites plus bas — la plus simple (**GitHub Actions**) ne demande **aucun
-> logiciel** sur votre PC. Comme l'application n'a pas pu être testée sur un
-> appareil, un petit travail de correction dans Android Studio peut être
-> nécessaire (voir la fin du document).
-
----
-
-## Fonctionnalités
-
-- **Mise en page façon Spotify** : barre de navigation en bas, contenu au-dessus.
-- **Accueil** : dernières écoutes.
-- **Dossiers** : parcourt téléphone + microSD, n'affiche que les dossiers
-  contenant de l'audio, et dans ceux-ci uniquement les fichiers audio.
-- **Playlists** enregistrées en local (base Room).
-- **Recherche** : barre en haut, résultats en dessous, sur tout le stockage.
-- **Menu contextuel** sur chaque titre : ajouter à une playlist, créer une
-  playlist à partir du titre, ajouter à la file de lecture.
-- **Sélection multiple** : ajouter plusieurs titres à une playlist / à la file.
-- **Édition de playlist** : retirer un titre ou une sélection.
-- **Page de lecture** : artiste, titre, repeat ; affiche en grand l'image
-  `jpg`/`png` présente dans le dossier du titre, si elle existe.
-- **Lecture en arrière-plan**, écran éteint (service Media3 + MediaSession).
-- **Détail de playlist** : « Tout lire », « Lecture aléatoire », « Repeat all »,
-  et choix d'une image de couverture (`jpg`/`png`).
-- **Formats** : mp3, m4a, wav, flac, ogg… (codecs gérés par ExoPlayer/Android).
-- **Lignes de titre** fines, multi-lignes : image du dossier à gauche,
-  métadonnées à droite ; **aucun emplacement vide** si pas d'image.
-- **Bouton avatar rond** en haut à gauche → réglages.
-- **Réglages** : scan manuel, personnalisation de l'affichage, mode
-  sombre/clair, lecture/affichage des métadonnées.
-- Permissions minimales et conformes (`READ_MEDIA_AUDIO`/`READ_MEDIA_IMAGES`
-  sur Android 13+, `READ_EXTERNAL_STORAGE` plafonné en dessous), pas d'accès
-  réseau.
+A native Android music player (Kotlin + Jetpack Compose + Media3) for playing **locally stored music** on the phone and microSD card. Designed for Android 12
+(tested on a Samsung Galaxy S10e), compatible with Android 8.0 and later.
 
 ---
 
-## Option A (recommandée) — Obtenir l'APK via GitHub Actions, sans rien installer
+## Features
 
-C'est la réponse à « un site pour transformer les sources en APK » : GitHub
-compile pour vous, gratuitement, dans le cloud.
+* **Spotify-inspired layout** with a bottom navigation bar and content above.
+* **Home** screen showing recently played tracks.
+* **Folders** browser for internal storage and microSD, displaying only folders
+  containing audio files and only audio files within them.
+* **Playlists** stored locally using Room.
+* **Search** across all local storage.
+* **Context menu** for each track:
 
-1. Créez un compte sur **https://github.com** (gratuit).
-2. Cliquez sur **New repository**, donnez-lui un nom (ex. `lecteur-local`),
-   laissez-le **Public**, puis **Create repository**.
-3. Sur la page du dépôt vide, cliquez **uploading an existing file**, puis
-   glissez-y **tout le contenu** de ce projet (décompressez le `.zip` d'abord,
-   et conservez l'arborescence, notamment le dossier `.github`). Validez avec
-   **Commit changes**.
-4. Le build démarre tout seul. Ouvrez l'onglet **Actions** : une exécution
-   « Build APK » apparaît (point orange = en cours, ✓ vert = terminé).
-   *(Si rien ne démarre : onglet Actions → « Build APK » → « Run workflow ».)*
-5. Quand c'est terminé (✓), cliquez sur l'exécution, descendez à
-   **Artifacts**, et téléchargez **`app-debug-apk`**. Vous obtenez un `.zip`
-   contenant `app-debug.apk`.
+  * Add to a playlist
+  * Create a new playlist from the track
+  * Add to the playback queue
+* **Multi-selection** to add multiple tracks to a playlist or queue.
+* **Playlist editing**: remove individual or multiple tracks.
+* **Now Playing** screen displaying artist, title, repeat mode, and the
+  `jpg`/`png` image found in the track's folder (if available).
+* **Background playback** with the screen off (Media3 + MediaSession service).
+* **Playlist details** with **Play All**, **Shuffle**, **Repeat All**, and a
+  custom cover image (`jpg`/`png`).
+* Supports **MP3, M4A, WAV, FLAC, OGG**, and other formats supported by
+  ExoPlayer/Android codecs.
+* Compact multi-line track items with folder artwork on the left and metadata
+  on the right; **no empty placeholder** when artwork is unavailable.
+* **Round avatar button** in the upper-left corner for quick access to Settings.
+* **Settings**:
 
-### Installer l'APK sur le Galaxy S10e
-1. Copiez `app-debug.apk` sur le téléphone (câble USB, ou téléchargement direct).
-2. Ouvrez-le avec l'explorateur de fichiers ; Android proposera d'autoriser
-   « installer des applications inconnues » pour cette source → acceptez.
-3. Installez, lancez **Lecteur Local**, accordez l'accès aux fichiers audio,
-   puis allez dans **Réglages → Scanner** pour détecter vos morceaux.
+  * Manual library scan
+  * Display customization
+  * Light/Dark theme
+  * Metadata display options
+* Minimal permissions only:
 
-> L'« APK de debug » est parfaitement utilisable au quotidien. L'« APK de
-> release » produit en option est **non signé** et ne s'installe pas tel quel ;
-> ignorez-le pour un usage personnel.
-
----
-
-## Option B — Compiler soi-même avec Android Studio
-
-1. Installez **Android Studio** (https://developer.android.com/studio).
-2. **File → Open** et sélectionnez le dossier du projet.
-3. Laissez Gradle se synchroniser (téléchargement des dépendances).
-4. **Build → Build App Bundle(s) / APK(s) → Build APK(s)**.
-5. L'APK se trouve dans `app/build/outputs/apk/debug/`.
-
-C'est aussi l'outil à utiliser pour corriger d'éventuelles erreurs (voir plus bas).
+  * `READ_MEDIA_AUDIO` / `READ_MEDIA_IMAGES` on Android 13+
+  * `READ_EXTERNAL_STORAGE` on earlier versions
+  * **No Internet permission required**
 
 ---
 
-## Pile technique
+## Option A (Recommended) — Build the APK with GitHub Actions
 
-Kotlin 2.0, Jetpack Compose, Media3/ExoPlayer 1.4 (lecture + arrière-plan),
-Room (playlists/historique), DataStore (réglages), Coil (images), Navigation
-Compose. `minSdk 26`, `targetSdk 34`.
+GitHub can compile the application for you, free of charge, in the cloud.
 
-Arborescence : `app/src/main/java/com/example/localmusic/` (code), `…/res`
-(ressources), `…/AndroidManifest.xml` (permissions et services).
+1. Create a free account on GitHub.
+2. Create a new **public** repository.
+3. Upload the entire project (including the `.github` directory) and commit the files.
+4. The build starts automatically. Open the **Actions** tab and wait for the **Build APK** workflow to complete.
+   *(If it doesn't start automatically: **Actions → Build APK → Run workflow**.)*
+5. Once finished, open the workflow, scroll down to **Artifacts**, and download **`app-debug-apk`**. The ZIP archive contains `app-debug.apk`.
 
----
+### Installing the APK on a Samsung Galaxy S10e
 
-## En cas d'erreur de compilation
+1. Copy `app-debug.apk` to the phone (USB cable or direct download).
+2. Open it with the file manager. Android will ask permission to install apps from unknown sources—allow it.
+3. Install **LocalBeats**, grant access to your audio files, then open **Settings → Scan Library** to detect your music.
 
-Le code est complet mais n'a pas pu être compilé ni testé sur un appareil.
-Si le build échoue :
-
-- **Sur GitHub Actions** : ouvrez l'exécution en échec, dépliez l'étape
-  « Compiler l'APK de debug » et lisez le message d'erreur (fichier + ligne).
-- **Sur Android Studio** : les erreurs s'affichent dans l'onglet **Build** ;
-  un clic mène directement à la ligne fautive. C'est l'environnement le plus
-  pratique pour corriger.
-
-La plupart des corrections éventuelles sont mineures (import manquant, nom à
-ajuster). N'hésitez pas à me communiquer le message d'erreur exact : je vous
-indiquerai la correction.
+> The **debug APK** is perfectly suitable for everyday use. The optional
+> **release APK** is unsigned and cannot be installed directly; it can safely
+> be ignored for personal use.
 
 ---
 
-*Identifiant d'application : `com.example.localmusic`. Aucune donnée n'est
-envoyée sur Internet ; tout reste sur l'appareil.*
+## Option B — Build the Project Yourself with Android Studio
+
+1. Install Android Studio.
+2. Select **File → Open** and open the project folder.
+3. Wait for Gradle to synchronize and download dependencies.
+4. Select **Build → Build App Bundle(s) / APK(s) → Build APK(s)**.
+5. The generated APK will be located in:
+
+```
+app/build/outputs/apk/debug/
+```
+
+Android Studio is also the recommended environment for fixing build errors.
+
+---
+
+## Technology Stack
+
+* Kotlin 2.0
+* Jetpack Compose
+* Media3 / ExoPlayer 1.4 (playback + background playback)
+* Room (playlists and history)
+* DataStore (settings)
+* Coil (image loading)
+* Navigation Compose
+
+**Minimum SDK:** 26 (Android 8.0)
+**Target SDK:** 34
+
+Project structure:
+
+* `app/src/main/java/com/example/localmusic/` — source code
+* `app/src/main/res/` — resources
+* `app/src/main/AndroidManifest.xml` — permissions and services
+
+---
+
+## Troubleshooting Build Errors
+
+The source code is complete but has not been compiled or tested on a physical device.
+
+If the build fails:
+
+* **GitHub Actions:** open the failed workflow, expand the **Build Debug APK**
+  step, and read the error message (file and line number).
+* **Android Studio:** build errors appear in the **Build** window. Clicking an
+  error takes you directly to the corresponding line of code, making it the
+  easiest environment for debugging.
+
+---
+
+**Application ID:** `com.example.localmusic`
+
+No data is transmitted over the Internet. All music, playlists, and settings
+remain entirely on your device.
+
+## License
+
+LocalBeats is free software licensed under the **[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) (GPL-3.0)**.
+
+You are free to use, study, modify, and redistribute this software under the terms of the GPL-3.0. Any modified or redistributed versions must also be licensed under GPL-3.0.
+
+See the [LICENSE](LICENSE) file for the full license text.
